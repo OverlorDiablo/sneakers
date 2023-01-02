@@ -85,7 +85,7 @@ function Main({ addToCart }) {
   React.useEffect(() => {
     axios.get('https://639de1ee3542a26130521b71.mockapi.io/items').then((res) => {
       setItems(res.data)
-    })
+    });
   }, [])
 
   //*---------------------------------------------------------*//

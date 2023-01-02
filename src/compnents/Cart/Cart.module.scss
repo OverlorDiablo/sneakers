@@ -27,6 +27,13 @@
   }
 }
 
+.cartComplete {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+}
+
 .items {
   flex: 1;
   overflow: auto;
@@ -71,6 +78,49 @@
   }
 }
 
+.cartEmpty {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  div {
+    text-align: center;
+    margin-bottom: 40px;
+
+    h3 {
+      margin-bottom: 9px;
+      font-weight: 600;
+      font-size: 22px;
+    }
+
+    p {
+      font-weight: 400;
+      font-size: 16px;
+      color: #000000;
+      opacity: 0.4;
+    }
+  }
+
+  .greenBtn {
+    width: 245px;
+  }
+}
+
+.arrowLeft {
+  position: absolute;
+  right: 205px;
+  top: 20px;
+}
+
+.imgCartEmpty {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 21px;
+}
+
+.cartTotalBlock {}
+
 .totalPrice,
 .tax {
   display: flex;
@@ -85,8 +135,6 @@
     font-weight: 700;
   }
 }
-
-.cartTotalBlock {}
 
 .points {
   flex: 1;
@@ -122,8 +170,9 @@
   }
 }
 
-.arrow {
+.arrowRight {
   position: absolute;
   right: 30px;
   top: 20px;
+  rotate: 180deg;
 }

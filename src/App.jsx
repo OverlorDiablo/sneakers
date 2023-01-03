@@ -9,6 +9,7 @@ import Main from "./compnents/Main/Main";
 function App() {
   const [cartOpened, setCartOpened] = React.useState(false);
   const [cartItems, setCartItems] = React.useState([]);
+  const [favorites, setFavorites] = React.useState([]);
 
   React.useEffect(() => {
     axios.get('https://639de1ee3542a26130521b71.mockapi.io/cart').then((res) => {
@@ -26,6 +27,16 @@ function App() {
     }
   }
 
+  const onAddToFavorite = (obj) => {
+    axios.post('https://639de1ee3542a26130521b71.mockapi.io/favorites', obj);
+
+    if (favorites.find((item) => item.id === obj.id)) {
+      setFavorites((prev) => prev.filter((item) => item.id !== obj.id))
+    } else {
+      setFavorites((prev) => [...prev, obj])
+    }
+  }
+
   const onRemoveItem = (id) => {
     axios.delete(`https://639de1ee3542a26130521b71.mockapi.io/cart/${id}`);
     setCartItems((prev) => prev.filter(item => item.id !== id))
@@ -38,7 +49,7 @@ function App() {
 
       <Header onClickOpenCart={() => setCartOpened(true)} />
 
-      <Main addToCart={onAddToCart} />
+      <Main addToCart={onAddToCart} addToFavorite={onAddToFavorite} />
 
     </div>
   );

@@ -78,7 +78,7 @@ import styles from "./Main.module.scss";
 //   }
 // ];
 
-function Main({ addToCart }) {
+function Main({ addToFavorite, addToCart }) {
   //*---------------------------------------------------------*//
   const [items, setItems] = React.useState([]);
 
@@ -117,7 +117,7 @@ function Main({ addToCart }) {
               title={obj.title}
               price={obj.price}
               imageUrl={obj.imageUrl}
-              onFavorite={() => console.log("ad")}
+              onFavorite={addToFavorite}
               onPlus={addToCart}
             />
           ))}

@@ -1,6 +1,6 @@
 import styles from "./Cart.module.scss";
 
-function Cart({ onClickCloseCart, onRemove, items = [] }) {
+function Cart({ onClickCloseCart, onRemove, items }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.rightSiteCart}>

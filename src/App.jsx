@@ -1,8 +1,10 @@
 import React from "react";
+import { Route, Routes } from 'react-router-dom';
 import axios from "axios";
 import Header from "./compnents/Header/Header";
 import Cart from "./compnents/Cart/Cart";
 import Main from "./compnents/Main/Main";
+import Favorites from "./compnents/Favorites/Favorites";
 
 
 
@@ -14,7 +16,10 @@ function App() {
   React.useEffect(() => {
     axios.get('https://639de1ee3542a26130521b71.mockapi.io/cart').then((res) => {
       setCartItems(res.data)
-    })
+    });
+    axios.get('https://639de1ee3542a26130521b71.mockapi.io/favorites').then((res) => {
+      setFavorites(res.data)
+    });
   }, [])
 
   const onAddToCart = (obj) => {
@@ -28,13 +33,22 @@ function App() {
   }
 
   const onAddToFavorite = (obj) => {
-    axios.post('https://639de1ee3542a26130521b71.mockapi.io/favorites', obj);
-
-    if (favorites.find((item) => item.id === obj.id)) {
+    if (favorites.find(favObj => favObj.id === obj.id)) {
+      axios.delete(`https://639de1ee3542a26130521b71.mockapi.io/favorites/${obj.id}`)
       setFavorites((prev) => prev.filter((item) => item.id !== obj.id))
     } else {
+      axios.post('https://639de1ee3542a26130521b71.mockapi.io/favorites', obj)
       setFavorites((prev) => [...prev, obj])
     }
+
+
+
+    // axios.post('https://639de1ee3542a26130521b71.mockapi.io/favorites', obj);
+    // if (favorites.find((item) => item.id === obj.id)) {
+    //   setFavorites((prev) => prev.filter((item) => item.id !== obj.id))
+    // } else {
+    //   setFavorites((prev) => [...prev, obj])
+    // }
   }
 
   const onRemoveItem = (id) => {
@@ -49,7 +63,14 @@ function App() {
 
       <Header onClickOpenCart={() => setCartOpened(true)} />
 
-      <Main addToCart={onAddToCart} addToFavorite={onAddToFavorite} />
+      <Routes>
+        <Route path="/" exact element={<Main addToCart={onAddToCart} addToFavorite={onAddToFavorite} />} />
+        <Route path="/favorites" exact element={<Favorites items={favorites} addToFavorite={onAddToFavorite} />} />
+      </Routes>
+
+
+
+
 
     </div>
   );

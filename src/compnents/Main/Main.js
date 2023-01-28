@@ -3,6 +3,49 @@ import axios from "axios";
 import Card from "../Card/Card";
 import styles from "./Main.module.scss";
 
+function Main({ isLoading, items, addToFavorite, addToCart, cartItems }) {
+  const [searchValue, setSearchValue] = React.useState("");
+
+  const setChangeSearchInput = (event) => {
+    setSearchValue(event.target.value)
+  }
+
+  const renderItems = () => {
+    const filtredItems = items.filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
+    return (isLoading ? [...Array(12)] : filtredItems)
+      .map((item, index) => (
+        <Card
+          key={index}
+          onFavorite={addToFavorite}
+          onPlus={addToCart}
+          added={cartItems.some(obj => Number(obj.id) === Number(item.id))}
+          loading={isLoading}
+          {...item}
+        />
+      ))
+  }
+
+  return (
+    <main>
+
+      <div className={styles.lineName}>
+        <h1>{searchValue ? `Поиск по запросу: "${searchValue}"` : "Все кроссовки"}</h1>
+        <div className={styles.searchBlock}>
+          <img src="/img/search.png" />
+          <input onChange={setChangeSearchInput} placeholder="Поиск..." />
+        </div>
+      </div>
+
+      <div className={styles.products}>
+        {renderItems()}
+      </div>
+
+    </main>
+  );
+}
+
+export default Main;
+
 // const items = [
 //   {
 //     "id": 1,
@@ -77,54 +120,3 @@ import styles from "./Main.module.scss";
 //     "imageUrl": "/img/sneakers/sneak12.jpg"
 //   }
 // ];
-
-function Main({ addToFavorite, addToCart }) {
-  //*---------------------------------------------------------*//
-  const [items, setItems] = React.useState([]);
-
-  React.useEffect(() => {
-    axios.get('https://639de1ee3542a26130521b71.mockapi.io/items').then((res) => {
-      setItems(res.data)
-    });
-  }, [])
-
-  //*---------------------------------------------------------*//
-
-  const [searchValue, setSearchValue] = React.useState("");
-
-  const setChangeSearchInput = (event) => {
-    setSearchValue(event.target.value)
-  }
-
-  return (
-    <main>
-
-      <div className={styles.lineName}>
-        <h1>{searchValue ? `Поиск по запросу: "${searchValue}"` : "Все кроссовки"}</h1>
-        <div className={styles.searchBlock}>
-          <img src="/img/search.png"></img>
-          <input onChange={setChangeSearchInput} placeholder="Поиск..."></input>
-        </div>
-      </div>
-
-      <div className={styles.products}>
-        {items
-          .filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
-          .map((obj) => (
-            <Card
-              key={obj.id}
-              id={obj.id}
-              title={obj.title}
-              price={obj.price}
-              imageUrl={obj.imageUrl}
-              onFavorite={addToFavorite}
-              onPlus={addToCart}
-            />
-          ))}
-      </div>
-
-    </main>
-  );
-}
-
-export default Main;

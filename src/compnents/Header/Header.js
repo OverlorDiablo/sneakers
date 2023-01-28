@@ -1,7 +1,7 @@
 import styles from "./Header.module.scss";
 import { Link } from 'react-router-dom';
 
-function Header(props) {
+function Header({ onClickOpenCart }) {
   return (
     <header>
 
@@ -16,7 +16,7 @@ function Header(props) {
       </Link>
 
       <div className={styles.headerRight}>
-        <div onClick={props.onClickOpenCart} className={styles.headerCart}>
+        <div onClick={onClickOpenCart} className={styles.headerCart}>
           <img src="/img/cart.svg"></img>
           <p>1205 грн.</p>
         </div>

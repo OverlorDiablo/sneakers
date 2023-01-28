@@ -1,50 +1,30 @@
 import React from 'react';
-import axios from "axios";
-import Card from "../Card/Card";
-import styles from "./Main.module.scss";
+import { Card } from '../../components';
+import styles from './Favorites.module.scss';
 
-function Main({ isLoading, items, addToFavorite, addToCart, cartItems }) {
-  const [searchValue, setSearchValue] = React.useState("");
-
-  const setChangeSearchInput = (event) => {
-    setSearchValue(event.target.value)
-  }
-
-  const renderItems = () => {
-    const filtredItems = items.filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
-    return (isLoading ? [...Array(12)] : filtredItems)
-      .map((item, index) => (
-        <Card
-          key={index}
-          onFavorite={addToFavorite}
-          onPlus={addToCart}
-          added={cartItems.some(obj => Number(obj.id) === Number(item.id))}
-          loading={isLoading}
-          {...item}
-        />
-      ))
-  }
-
+export function Favorites({ items, addToFavorite }) {
   return (
     <main>
-
       <div className={styles.lineName}>
-        <h1>{searchValue ? `Поиск по запросу: "${searchValue}"` : "Все кроссовки"}</h1>
-        <div className={styles.searchBlock}>
-          <img src="/img/search.png" />
-          <input onChange={setChangeSearchInput} placeholder="Поиск..." />
-        </div>
+        <h1>Мои закладки</h1>
       </div>
 
       <div className={styles.products}>
-        {renderItems()}
+        {items.map((obj) => (
+          <Card
+            key={obj.id}
+            id={obj.id}
+            title={obj.title}
+            price={obj.price}
+            imageUrl={obj.imageUrl}
+            onFavorite={addToFavorite}
+            favorited={true}
+          />
+        ))}
       </div>
-
     </main>
   );
 }
-
-export default Main;
 
 // const items = [
 //   {

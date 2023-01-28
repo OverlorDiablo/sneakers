@@ -1,13 +1,12 @@
-import styles from "./Header.module.scss";
+import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
 
-function Header({ onClickOpenCart }) {
+export function Header({ onClickOpenCart }) {
   return (
     <header>
-
       <Link to="/">
         <div className={styles.headerLeft}>
-          <img src="/img/logo.png"></img>
+          <img src="/img/logo.png" />
           <div className={styles.headerInfo}>
             <h3>REACT SNEAKERS</h3>
             <p>Магазин лучших кроссовок</p>
@@ -17,21 +16,16 @@ function Header({ onClickOpenCart }) {
 
       <div className={styles.headerRight}>
         <div onClick={onClickOpenCart} className={styles.headerCart}>
-          <img src="/img/cart.svg"></img>
+          <img src="/img/cart.svg" />
           <p>1205 грн.</p>
         </div>
         <div>
-
           <Link to="/favorites">
-            <img src="/img/header-like.svg"></img>
+            <img src="/img/header-like.svg" />
           </Link>
-
         </div>
-        <img src="/img/user.svg"></img>
+        <img src="/img/user.svg" />
       </div>
-
-    </header >
+    </header>
   );
 }
-
-export default Header;

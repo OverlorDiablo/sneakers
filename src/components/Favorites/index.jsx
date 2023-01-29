@@ -1,8 +1,11 @@
 import React from 'react';
+import { AppContext } from '../../App';
 import { Card } from '../../components';
 import styles from './Favorites.module.scss';
 
-export function Favorites({ items, addToFavorite }) {
+export function Favorites({ addToCart, addToFavorite }) {
+  const { isItemAdded, favorites } = React.useContext(AppContext);
+
   return (
     <main>
       <div className={styles.lineName}>
@@ -10,14 +13,16 @@ export function Favorites({ items, addToFavorite }) {
       </div>
 
       <div className={styles.products}>
-        {items.map((obj) => (
+        {favorites.map((obj) => (
           <Card
             key={obj.id}
             id={obj.id}
             title={obj.title}
             price={obj.price}
             imageUrl={obj.imageUrl}
+            onPlus={addToCart}
             onFavorite={addToFavorite}
+            added={isItemAdded(obj.id)}
             favorited={true}
           />
         ))}

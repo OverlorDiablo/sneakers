@@ -13,19 +13,12 @@ export function Card({
   added = false,
   loading = false,
 }) {
-  const [isAdded, setIsAdded] = React.useState(added);
-  const [isFavorite, setIsFavorite] = React.useState(favorited);
-
   const onClickPlus = () => {
-    console.log(id);
-
     onPlus({ id, imageUrl, title, price });
-    setIsAdded(!isAdded);
   };
 
   const onClickFavorite = () => {
     onFavorite({ id, imageUrl, title, price });
-    setIsFavorite(!isFavorite);
   };
 
   return (
@@ -36,7 +29,7 @@ export function Card({
         <>
           <div className={styles.favorite} onClick={onClickFavorite}>
             <img
-              src={isFavorite ? '/img/liked.svg' : '/img/unlike.svg'}
+              src={favorited ? '/img/liked.svg' : '/img/unlike.svg'}
               className={styles.actionButton}
             />
           </div>
@@ -48,7 +41,7 @@ export function Card({
               <b>{price} грн.</b>
             </div>
             <img
-              src={isAdded ? '/img/plus-active.svg' : '/img/plus.svg'}
+              src={added ? '/img/plus-active.svg' : '/img/plus.svg'}
               onClick={onClickPlus}
               className={styles.addToCart}
             />

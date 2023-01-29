@@ -1,8 +1,11 @@
 import React from 'react';
-import { Card } from '..';
+import { AppContext } from '../../App';
+import { Card } from '../../components';
 import styles from './Main.module.scss';
 
-export function Main({ isLoading, items, addToFavorite, addToCart, cartItems }) {
+export function Main({ isLoading, items, addToFavorite, addToCart }) {
+  const { isItemAdded, isItemFavorited } = React.useContext(AppContext);
+
   const [searchValue, setSearchValue] = React.useState('');
 
   const setChangeSearchInput = (event) => {
@@ -19,7 +22,8 @@ export function Main({ isLoading, items, addToFavorite, addToCart, cartItems }) 
         key={index}
         onFavorite={addToFavorite}
         onPlus={addToCart}
-        added={cartItems.some((obj) => Number(obj.id) === Number(item.id))}
+        added={isItemAdded(item && item.id)}
+        favorited={isItemFavorited(item && item.id)}
         loading={isLoading}
         {...item}
       />

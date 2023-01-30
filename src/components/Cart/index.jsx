@@ -1,6 +1,19 @@
+import React from "react";
+import { AppContext } from '../../App';
+import Info from "../Info/info";
 import styles from './Cart.module.scss';
 
 export function Cart({ onClickCloseCart, onRemove, items }) {
+  const { setCartItems } = React.useContext(AppContext);
+
+  const [isOrderComplete, setIsOrderComplete] = React.useState(false);
+
+  const onClickOrder = () => {
+    setIsOrderComplete(true);
+    setCartItems([]);
+  }
+
+
   return (
     <div className={styles.overlay}>
       <div className={styles.rightSiteCart}>
@@ -42,24 +55,18 @@ export function Cart({ onClickCloseCart, onRemove, items }) {
                 <div className={styles.points} />
                 <b>1074 грн.</b>
               </div>
-              <button className={styles.greenBtn}>
+              <button onClick={onClickOrder} className={styles.greenBtn}>
                 Оформить заказ
                 <img src="/img/arrow.svg" className={styles.arrowRight} />
               </button>
             </div>
           </div>
         ) : (
-          <div className={styles.cartEmpty}>
-            <img className={styles.imgCartEmpty} src="/img/empty-cart.png" alt="" />
-            <div>
-              <h3>Корзина пустая</h3>
-              <p>Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.</p>
-            </div>
-            <button onClick={onClickCloseCart} className={styles.greenBtn}>
-              <img src="/img/arrow.svg" className={styles.arrowLeft} />
-              Вернуться назад
-            </button>
-          </div>
+          <Info
+            title={isOrderComplete ? "Заказ оформлен" : " Корзина пустая"}
+            description={isOrderComplete ? "Ваш заказ #6 скоро будет передан курьерской доставке" : "Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."}
+            image={isOrderComplete ? "/img/complete-order.png" : "/img/empty-cart.png"}
+          />
         )}
       </div>
     </div>

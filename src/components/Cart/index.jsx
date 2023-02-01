@@ -1,22 +1,40 @@
 import React from "react";
+import { api } from '../../api';
 import { AppContext } from '../../App';
 import Info from "../Info/info";
 import styles from './Cart.module.scss';
 
-export function Cart({ onClickCloseCart, onRemove, items }) {
-  const { setCartItems } = React.useContext(AppContext);
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+export function Cart({ onClickCloseCart, onRemove, items, opened }) {
+  const { cartItems, setCartItems } = React.useContext(AppContext);
+  const [orderId, setOrderId] = React.useState(null);
   const [isOrderComplete, setIsOrderComplete] = React.useState(false);
+  const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0);
 
-  const onClickOrder = () => {
+  const onClickOrder = async () => {
+    const { data: orders } = await api.get('/orders');
+    const { data: newOrder } = await api.post('/orders', {
+      id: orders.length + 1,
+      items: cartItems
+    });
+
+
+    setOrderId(newOrder.id);
     setIsOrderComplete(true);
     setCartItems([]);
+
+    for (let i = 0; i < cartItems.length; i++) {
+      const item = cartItems[i];
+      await api.delete(`/cart/${item.id}`);
+      await delay(200);
+    }
   }
 
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.rightSiteCart}>
+    <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ' '}`}>
+      <div className={styles.rightSideCart}>
         <h2>
           Корзина
           <img
@@ -48,12 +66,12 @@ export function Cart({ onClickCloseCart, onRemove, items }) {
               <div className={styles.totalPrice}>
                 <p>Итого:</p>
                 <div className={styles.points} />
-                <b>21 498 грн.</b>
+                <b>{totalPrice} грн</b>
               </div>
               <div className={styles.tax}>
                 <p>Налог 5%:</p>
                 <div className={styles.points} />
-                <b>1074 грн.</b>
+                <b>{Math.round(totalPrice * 0.05)} грн</b>
               </div>
               <button onClick={onClickOrder} className={styles.greenBtn}>
                 Оформить заказ
@@ -64,11 +82,11 @@ export function Cart({ onClickCloseCart, onRemove, items }) {
         ) : (
           <Info
             title={isOrderComplete ? "Заказ оформлен" : " Корзина пустая"}
-            description={isOrderComplete ? "Ваш заказ #6 скоро будет передан курьерской доставке" : "Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."}
+            description={isOrderComplete ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке` : "Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."}
             image={isOrderComplete ? "/img/complete-order.png" : "/img/empty-cart.png"}
           />
         )}
       </div>
-    </div>
+    </div >
   );
 }

@@ -29,7 +29,7 @@ function App() {
       const [itemsResponse, cartResponse, favoritesResponse] = await Promise.all([
         api.get('/items'),
         api.get('/cart'),
-        api.get('/favorites')
+        api.get('/favorites'),
       ]);
 
       setItems(itemsResponse.data);
@@ -40,41 +40,42 @@ function App() {
     }
   };
 
-  const onAddToCart = async (obj) => {
+  const onAddToCart = (obj) => {
     try {
       const exist = cartItems.find((item) => Number(item.id) === Number(obj.id));
 
       if (exist) {
         onRemoveItem(obj.id);
       } else {
-        const { data } = await api.post('/cart', obj);
+        setCartItems((prev) => [...prev, obj]);
 
-        setCartItems((prev) => [...prev, data]);
+        api.post('/cart', obj);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onAddToFavorite = async (obj) => {
+  const onAddToFavorite = (obj) => {
     try {
       const exist = favorites.find((item) => Number(item.id) === Number(obj.id));
 
       if (exist) {
         setFavorites((prev) => prev.filter((item) => Number(item.id) !== Number(obj.id)));
-        await api.delete(`/favorites/${obj.id}`);
+        api.delete(`/favorites/${obj.id}`);
       } else {
-        const { data } = await api.post('/favorites', obj);
-        setFavorites((prev) => [...prev, data]);
+        setFavorites((prev) => [...prev, obj]);
+        api.post('/favorites', obj);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onRemoveItem = async (id) => {
+  const onRemoveItem = (id) => {
     setCartItems((prev) => prev.filter((item) => Number(item.id) !== Number(id)));
-    await api.delete(`/cart/${id}`);
+
+    api.delete(`/cart/${id}`);
   };
 
   const isItemAdded = (id) => {
@@ -87,7 +88,15 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ cartItems, favorites, items, isItemAdded, isItemFavorited, setCartOpened, setCartItems }}
+      value={{
+        cartItems,
+        favorites,
+        items,
+        isItemAdded,
+        isItemFavorited,
+        setCartOpened,
+        setCartItems,
+      }}
     >
       <div className="wrapper">
         <Cart
@@ -122,13 +131,7 @@ function App() {
             }
           />
 
-          <Route
-            path="/orders"
-            exact
-            element={
-              <Orders />
-            }
-          />
+          <Route path="/orders" exact element={<Orders />} />
         </Routes>
       </div>
     </AppContext.Provider>

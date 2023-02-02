@@ -1,10 +1,9 @@
-import React from "react";
+import React from 'react';
 import { AppContext } from '../../App';
 import styles from './Cart.module.scss';
 
-const Info = ({ image, title, description }) => {
+export const Info = ({ image, title, description }) => {
   const { setCartOpened } = React.useContext(AppContext);
-
 
   return (
     <div className={styles.cartEmpty}>
@@ -18,7 +17,7 @@ const Info = ({ image, title, description }) => {
         Вернуться назад
       </button>
     </div>
-  )
-}
+  );
+};
 
 export default Info;

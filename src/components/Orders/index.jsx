@@ -1,17 +1,15 @@
 import React from 'react';
 import { api } from '../../api';
-import { AppContext } from '../../App';
 import { Card } from '../../components';
 import styles from './Orders.module.scss';
 
-export function Orders() {
-  const { isItemAdded, isItemFavorited } = React.useContext(AppContext);
+export const Orders = () => {
   const [orders, setOrders] = React.useState([]);
 
   const fetchData = async () => {
-    const { data } = await api.get('/orders')
+    const { data } = await api.get('/orders');
     setOrders(data.reduce((prev, obj) => [...prev, ...obj.items], []));
-  }
+  };
 
   React.useEffect(() => {
     fetchData();
@@ -36,4 +34,4 @@ export function Orders() {
       </div>
     </main>
   );
-}
+};

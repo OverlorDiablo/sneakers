@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import CardSkeleton from './CardSkeleton';
 import styles from './Card.module.scss';
 
-export function Card({
+export const Card = ({
   id,
   imageUrl,
   title,
@@ -13,7 +13,7 @@ export function Card({
   favorited = false,
   added = false,
   loading = false,
-}) {
+}) => {
   const { pathname } = useLocation();
 
   const onClickPlus = () => {
@@ -30,12 +30,14 @@ export function Card({
         <CardSkeleton />
       ) : (
         <>
-          {pathname !== '/orders' && < div className={styles.favorite} onClick={onClickFavorite}>
-            <img
-              src={favorited ? '/img/liked.svg' : '/img/unlike.svg'}
-              className={styles.actionButton}
-            />
-          </div>}
+          {pathname !== '/orders' && (
+            <div className={styles.favorite} onClick={onClickFavorite}>
+              <img
+                src={favorited ? '/img/liked.svg' : '/img/unlike.svg'}
+                className={styles.actionButton}
+              />
+            </div>
+          )}
           <img src={imageUrl} className={styles.sneakerPhoto} />
           <p className={styles.cardInfo}>{title}</p>
           <div className={styles.cardPrice}>
@@ -43,15 +45,16 @@ export function Card({
               <p>Цена:</p>
               <b>{price} грн</b>
             </div>
-            {pathname !== '/orders' && <img
-              src={added ? '/img/plus-active.svg' : '/img/plus.svg'}
-              onClick={onClickPlus}
-              className={styles.addToCart}
-            />}
+            {pathname !== '/orders' && (
+              <img
+                src={added ? '/img/plus-active.svg' : '/img/plus.svg'}
+                onClick={onClickPlus}
+                className={styles.addToCart}
+              />
+            )}
           </div>
         </>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
-}
+};

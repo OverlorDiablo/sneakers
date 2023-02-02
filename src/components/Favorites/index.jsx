@@ -3,7 +3,7 @@ import { AppContext } from '../../App';
 import { Card } from '../../components';
 import styles from './Favorites.module.scss';
 
-export function Favorites({ addToCart, addToFavorite }) {
+export const Favorites = ({ addToCart, addToFavorite }) => {
   const { isItemAdded, favorites } = React.useContext(AppContext);
 
   return (
@@ -29,4 +29,4 @@ export function Favorites({ addToCart, addToFavorite }) {
       </div>
     </main>
   );
-}
+};

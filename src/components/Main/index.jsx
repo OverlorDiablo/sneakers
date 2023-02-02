@@ -3,7 +3,7 @@ import { AppContext } from '../../App';
 import { Card } from '../../components';
 import styles from './Main.module.scss';
 
-export function Main({ isLoading, items, addToFavorite, addToCart }) {
+export const Main = ({ isLoading, items, addToFavorite, addToCart }) => {
   const { isItemAdded, isItemFavorited } = React.useContext(AppContext);
 
   const [searchValue, setSearchValue] = React.useState('');
@@ -43,4 +43,4 @@ export function Main({ isLoading, items, addToFavorite, addToCart }) {
       <div className={styles.products}>{renderItems()}</div>
     </main>
   );
-}
+};

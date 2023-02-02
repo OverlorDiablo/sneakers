@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../App';
 
-export function Header({ onClickOpenCart }) {
+export const Header = ({ onClickOpenCart }) => {
   const { cartItems } = React.useContext(AppContext);
   const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0);
 
@@ -37,4 +37,4 @@ export function Header({ onClickOpenCart }) {
       </div>
     </header>
   );
-}
+};

@@ -1,28 +1,41 @@
-import React from 'react';
+import React from "react";
+import { useSelector } from 'react-redux';
 import { api } from '../../api';
-import { AppContext } from '../../App';
-import Info from '../Info/info';
+import Info from "../Info/info";
 import styles from './Cart.module.scss';
+import { setCartItems } from '../../redux/slices/cart/slice';
+import { RootState } from '../../redux/types';
+import { CartItem } from '../../redux/slices/cart/types';
+import { ProductsItem } from '../../redux/slices/products/types';
+import { useAppDispatch } from '../../redux/store';
 
-export const Cart = ({ onClickCloseCart, onRemove, items, opened }) => {
-  const { cartItems, setCartItems } = React.useContext(AppContext);
+interface CartProps {
+  onClickCloseCart: () => void,
+  onRemove: (id: number) => void,
+  items: ProductsItem[],
+  opened: boolean
+}
+
+export const Cart: React.FC<CartProps> = ({ onClickCloseCart, onRemove, items, opened }) => {
+  const dispatch = useAppDispatch();
+  const { cart } = useSelector(({ cart }: RootState) => cart)
   const [orderId, setOrderId] = React.useState(null);
   const [isOrderComplete, setIsOrderComplete] = React.useState(false);
-  const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0);
+  const totalPrice = cart.reduce((sum: number, obj: CartItem) => obj.price + sum, 0);
 
   const onClickOrder = async () => {
     const { data: orders } = await api.get('/orders');
     const { data: newOrder } = await api.post('/orders', {
       id: orders.length + 1,
-      items: cartItems,
+      items: cart
     });
 
     api.put('/cart', []);
 
     setOrderId(newOrder.id);
     setIsOrderComplete(true);
-    setCartItems([]);
-  };
+    dispatch(setCartItems([]));
+  }
 
   return (
     <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ' '}`}>
@@ -39,7 +52,7 @@ export const Cart = ({ onClickCloseCart, onRemove, items, opened }) => {
         {items.length > 0 ? (
           <div className={styles.cartComplete}>
             <div className={styles.items}>
-              {items.map((obj) => (
+              {items.map((obj: CartItem) => (
                 <div key={obj.id} className={styles.cartItem}>
                   <img className={styles.cartItemPhoto} src={obj.imageUrl} />
                   <div className={styles.cartItemInfo}>
@@ -73,16 +86,12 @@ export const Cart = ({ onClickCloseCart, onRemove, items, opened }) => {
           </div>
         ) : (
           <Info
-            title={isOrderComplete ? 'Заказ оформлен' : ' Корзина пустая'}
-            description={
-              isOrderComplete
-                ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
-                : 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'
-            }
-            image={isOrderComplete ? '/img/complete-order.png' : '/img/empty-cart.png'}
+            title={isOrderComplete ? "Заказ оформлен" : " Корзина пустая"}
+            description={isOrderComplete ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке` : "Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."}
+            image={isOrderComplete ? "/img/complete-order.png" : "/img/empty-cart.png"}
           />
         )}
       </div>
-    </div>
+    </div >
   );
-};
+}

@@ -1,15 +1,21 @@
 import React from 'react';
 import { api } from '../../api';
 import { Card } from '../../components';
+import { CartItem } from '../../redux/slices/cart/types';
 import styles from './Orders.module.scss';
 
-export const Orders = () => {
-  const [orders, setOrders] = React.useState([]);
+type OrderItem = {
+  id: number,
+  items: CartItem[]
+}
+
+export function Orders() {
+  const [orders, setOrders] = React.useState<CartItem[]>([]);
 
   const fetchData = async () => {
-    const { data } = await api.get('/orders');
-    setOrders(data.reduce((prev, obj) => [...prev, ...obj.items], []));
-  };
+    const { data } = await api.get<OrderItem[]>('/orders')
+    setOrders(data.reduce((prev: CartItem[], obj: OrderItem) => [...prev, ...obj.items], []));
+  }
 
   React.useEffect(() => {
     fetchData();
@@ -22,7 +28,7 @@ export const Orders = () => {
       </div>
 
       <div className={styles.products}>
-        {orders.map((obj) => (
+        {orders.map((obj: CartItem) => (
           <Card
             key={+obj.id * Math.random()}
             id={obj.id}
@@ -34,4 +40,4 @@ export const Orders = () => {
       </div>
     </main>
   );
-};
+}

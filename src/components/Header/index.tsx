@@ -1,11 +1,18 @@
-import React from 'react';
+import React from "react";
+import { useSelector } from 'react-redux';
 import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
-import { AppContext } from '../../App';
+import { RootState } from '../../redux/types';
+import { CartItem } from '../../redux/slices/cart/types';
 
-export const Header = ({ onClickOpenCart }) => {
-  const { cartItems } = React.useContext(AppContext);
-  const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0);
+interface HeaderProps {
+  onClickOpenCart: () => void
+}
+
+export const Header: React.FC<HeaderProps> = ({ onClickOpenCart }) => {
+  const { cart } = useSelector(({ cart }: RootState) => cart)
+
+  const totalPrice = cart.reduce((sum: number, obj: CartItem) => obj.price + sum, 0);
 
   return (
     <header>
@@ -37,4 +44,4 @@ export const Header = ({ onClickOpenCart }) => {
       </div>
     </header>
   );
-};
+}
